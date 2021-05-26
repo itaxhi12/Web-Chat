@@ -1,0 +1,84 @@
+/** @format */
+
+.container {
+  &-changepass {
+    background: var(--profile-background);
+    width: 30%;
+    height: 100vh;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    flex-direction: column;
+    transition: 500ms;
+    &.active {
+      left: 0;
+      transition: 500ms;
+    }
+    &-header {
+      height: 4em;
+      color: white;
+      display: flex;
+      font-size: large;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 1em;
+      background: var(--button-background);
+      &-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      & p {
+        margin-left: 1em;
+        font-weight: 500;
+      }
+    }
+    &-form {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: scroll;
+      &-input {
+        height: 15%;
+        width: 95%;
+        padding: 1em 10px;
+        background-color: var(--creds-background);
+        color: var(--button-background);
+        margin: 1em 0;
+        box-shadow: 0 6px 4px -4px rgba(0, 0, 0, 0.2);
+        & input {
+          margin-top: 1em;
+          height: 10%;
+          width: 90%;
+          padding: 1em;
+          background: transparent;
+          border-bottom: 1px solid rgba(var(--text-color), 0.1);
+          color: rgba(var(--text-color), 1);
+          &:focus {
+            outline: none;
+            border-bottom: 1px solid var(--button-background);
+          }
+        }
+      }
+      &-submit {
+        width: 50%;
+        height: 2em;
+        background-color: var(--button-background);
+        border-radius: 1em;
+        font-size: large;
+        color: white;
+        &:hover {
+          transform: scale(1.05);
+          transition: 0.2s;
+          background-color: var(--button-background);
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+}

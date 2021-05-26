@@ -1,0 +1,22 @@
+/** @format */
+.container {
+  &-navbar {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background-color: var(--navbar-background);
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    &-pfp {
+      margin: 1em;
+    }
+    &-themechanger {
+      margin: 1em;
+    }
+    &-dropdown {
+      margin: 0.1em;
+      cursor: pointer;
+    }
+  }
+}

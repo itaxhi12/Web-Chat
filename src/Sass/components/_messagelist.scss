@@ -1,0 +1,47 @@
+/** @format */
+
+.container {
+  &-messagelist {
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    &-messages {
+      height: 90vh;
+      width: 100%;
+      // padding: 0.5em;
+      overflow-y: scroll;
+    }
+    &-send {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 3.5em;
+      width: 100%;
+      background-color: var(--navbar-background);
+      & input {
+        height: 3em;
+        width: 85%;
+        padding: 0 1em;
+        border-radius: 20px;
+        background: var(--input-background);
+        color: rgba(var(--text-color), 1);
+        &:focus {
+          outline: none;
+        }
+      }
+      & button {
+        height: 3em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3em;
+        margin: 0.5em;
+        background: var(--button-background);
+        color: white;
+        border-radius: 50%;
+      }
+    }
+  }
+}

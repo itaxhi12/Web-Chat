@@ -1,0 +1,21 @@
+/** @format */
+
+.container {
+  &-messagenav {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
+    background: var(--navbar-background);
+    position: relative;
+    box-shadow: 0 6px 4px -4px rgba(0, 0, 0, 0.2);
+    &-pfp {
+      margin: 1em;
+    }
+    &-title {
+      width: 100%;
+      font-weight: 500;
+      color: rgba(var(--text-color), 1);
+    }
+  }
+}

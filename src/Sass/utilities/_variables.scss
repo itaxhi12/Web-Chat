@@ -1,0 +1,28 @@
+/** @format */
+
+[dark-theme="dark"] {
+  --background: #131c21;
+  --rgb-background: 19, 28, 33;
+  --button-background: #00af9c;
+  --message: #056162;
+  --profile-background: #131c21;
+  --creds-background: #131c21;
+  --text-color: 255, 255, 255;
+  --input-border: 211, 211, 211;
+  --navbar-background: #323739;
+  --scrollbar-thumb: #323739;
+  --input-background: #282d2f;
+}
+[dark-theme="light"] {
+  --background: white;
+  --rgb-background: 255, 255, 255;
+  --profile-background: #ededed;
+  --input-background: #d9d9d9;
+  --creds-background: white;
+  --message: #2386c8;
+  --button-background: #2386c8;
+  --text-color: 0, 0, 0;
+  --input-border: 211, 211, 211;
+  --navbar-background: #ededed;
+  --scrollbar-thumb: #d9d9d9;
+}

@@ -1,0 +1,101 @@
+/** @format */
+
+.container {
+  &-form {
+    height: 100vh;
+    width: 100vw;
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    &-header {
+      font-size: 2em;
+      color: rgba(var(--text-color), 1);
+      margin-bottom: 0.7em;
+      line-height: 1em;
+      font-weight: 500;
+      padding: 0.5em;
+      border-bottom: 1px solid rgba(var(--text-color), 0.3);
+    }
+    &-form {
+      z-index: 5;
+      padding: 60px 40px;
+      border-radius: 0.7em;
+      &-input {
+        position: relative;
+        margin: 2em 0.5em;
+        width: 19em;
+        height: 2.5em;
+
+        & input {
+          border: 1px solid rgba(var(--input-border), 0.9);
+          border-radius: 5px;
+          height: 100%;
+          color: rgba(var(--text-color), 1);
+          background: transparent;
+          width: 100%;
+          padding: 0 0.5em;
+          font-size: 1em;
+          &:focus {
+            outline: none;
+          }
+        }
+        & span {
+          position: absolute;
+          left: 0.5em;
+          font-size: 1.3em;
+          top: 0.5em;
+          color: rgba(var(--text-color), 0.5);
+          transition: 0.5s;
+          pointer-events: none;
+        }
+        & input:focus ~ span {
+          transform: translateY(-1.25em) translateX(-0.1em);
+          background-color: var(--background);
+          font-size: 1em;
+        }
+        & input:valid ~ span {
+          transform: translateY(-1.25em) translateX(-0.1em);
+          font-size: 1em;
+          background-color: var(--background);
+        }
+      }
+    }
+    &-submit {
+      height: 4em;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      & input {
+        width: 50%;
+        height: 2.5em;
+        cursor: pointer;
+        background-color: var(--button-background);
+        border-radius: 1em;
+        font-size: large;
+        color: white;
+        &:hover {
+          transform: scale(1.05);
+          transition: 0.2s;
+          background-color: var(--button-background);
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+    &-redirect {
+      width: 100%;
+
+      text-align: center;
+      color: rgba(var(--text-color), 1);
+    }
+    &-checkbox {
+      text-align: center;
+      font-size: 1.2em;
+      margin: 1em;
+      color: rgba(var(--text-color), 1);
+    }
+  }
+}
