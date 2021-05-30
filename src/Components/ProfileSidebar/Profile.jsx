@@ -5,9 +5,13 @@ import React, { useState } from "react";
 import CreateIcon from "@material-ui/icons/Create";
 import IconButton from "@material-ui/core/IconButton";
 import CheckIcon from "@material-ui/icons/Check";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 const Profile = ({ isOpen, changeOpen }) => {
   const darkmode = useSelector((state) => state.darkmode.darkmode);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user[0]);
+  const [input, setInput] = useState({});
   const [inputDis, SetinputDis] = useState(true);
   const [textDis, setTextDis] = useState(true);
   const changeDisabled = () => {
@@ -15,6 +19,53 @@ const Profile = ({ isOpen, changeOpen }) => {
   };
   const changeDisabledText = () => {
     setTextDis(!textDis);
+  };
+  const changeName = () => {
+    axios
+      .put(
+        `http://localhost:4000/changename/${user.user.username}`,
+        { name: input.name },
+        { headers: { Authorization: user.jwt } }
+      )
+      .then((res) => {
+        const data = [res.data];
+        if (localStorage.getItem("user")) {
+          localStorage.setItem("user", JSON.stringify(data));
+          dispatch({ type: "LOGIN", data: data });
+        } else {
+          sessionStorage.setItem("user", JSON.stringify(data));
+          dispatch({ type: "LOGIN", data: data });
+        }
+        SetinputDis(!inputDis);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const changeStatus = () => {
+    axios
+      .put(
+        `http://localhost:4000/changestatus/${user.user.username}`,
+        { status: input.status },
+        { headers: { Authorization: user.jwt } }
+      )
+      .then((res) => {
+        const data = [res.data];
+        if (localStorage.getItem("user")) {
+          localStorage.setItem("user", JSON.stringify(data));
+          dispatch({ type: "LOGIN", data: data });
+        } else {
+          sessionStorage.setItem("user", JSON.stringify(data));
+          dispatch({ type: "LOGIN", data: data });
+        }
+        setTextDis(!textDis);
+      })
+      .catch((err) => console.log(err));
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInput((state) => {
+      return { ...state, [name]: value };
+    });
   };
   return (
     <div className={isOpen ? "container-profile active" : "container-profile"}>
@@ -35,7 +86,13 @@ const Profile = ({ isOpen, changeOpen }) => {
         <div className="container-profile-creds-name">
           <p>Your Name</p>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <input placeholder="Your Name" disabled={inputDis} />
+            <input
+              name="name"
+              defaultValue={user.user.name}
+              placeholder="Your Name"
+              disabled={inputDis}
+              onChange={handleChange}
+            />
             {inputDis ? (
               <IconButton onClick={changeDisabled}>
                 <CreateIcon
@@ -43,7 +100,7 @@ const Profile = ({ isOpen, changeOpen }) => {
                 />
               </IconButton>
             ) : (
-              <IconButton onClick={changeDisabled}>
+              <IconButton onClick={changeName}>
                 <CheckIcon
                   style={{
                     color: darkmode ? "#00af9c" : "#2386c8",
@@ -58,7 +115,12 @@ const Profile = ({ isOpen, changeOpen }) => {
         <div className="container-profile-creds-status">
           <p>About</p>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <textarea id="status" disabled={textDis} />{" "}
+            <textarea
+              name="status"
+              defaultValue={user.user.status}
+              onChange={handleChange}
+              disabled={textDis}
+            />{" "}
             {textDis ? (
               <IconButton onClick={changeDisabledText}>
                 <CreateIcon
@@ -66,7 +128,7 @@ const Profile = ({ isOpen, changeOpen }) => {
                 />
               </IconButton>
             ) : (
-              <IconButton onClick={changeDisabledText}>
+              <IconButton onClick={changeStatus}>
                 <CheckIcon
                   style={{
                     color: darkmode ? "#00af9c" : "#2386c8",

@@ -39,10 +39,8 @@
         align-items: center;
         height: 4.5em;
         line-height: 50px;
-        display: flex;
-        align-items: center;
         justify-content: flex-start;
-
+        cursor: pointer;
         &-name {
           margin-left: 0.5em;
           border-bottom: 1px solid rgba(var(--text-color), 0.05);

@@ -4,8 +4,11 @@ import React, { useState } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import Message from "../Message/Message";
 import moment from "moment";
+import { useSelector } from "react-redux";
 const MY_USER_ID = "apple";
-const MessageList = ({closeAbout}) => {
+const MessageList = ({ closeAbout }) => {
+  const creds = useSelector((state) => state.chats.creds);
+  const darkmode = useSelector((state) => state.darkmode.darkmode);
   const [messages] = useState([
     {
       id: 1,
@@ -141,13 +144,36 @@ const MessageList = ({closeAbout}) => {
 
   return (
     <div onClick={closeAbout} className="container-messagelist">
-      <div className="container-messagelist-messages">{renderMessages()}</div>
-      <div className="container-messagelist-send">
-        <input placeholder="Type a message" />
-        <button>
-          <SendIcon />
-        </button>
-      </div>
+      {creds ? (
+        <>
+          <div className="container-messagelist-messages">
+            {renderMessages()}
+          </div>
+          <div className="container-messagelist-send">
+            <input placeholder="Type a message" />
+            <button>
+              <SendIcon />
+            </button>
+          </div>
+        </>
+      ) : (
+        <div
+          style={{
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
+          <p
+            style={{
+              color: darkmode ? "white" : "black",
+              fontSize: "2em",
+              fontWeight: "400",
+            }}
+          >
+            Please Select a chat to start talking
+          </p>
+        </div>
+      )}
     </div>
   );
 };
