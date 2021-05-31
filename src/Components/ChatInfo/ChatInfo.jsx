@@ -1,22 +1,22 @@
 import React from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import { useSelector } from "react-redux";
-import Avatar from "@material-ui/core/Avatar";
+// import Avatar from "@material-ui/core/Avatar";
 
 const ChatInfo = ({ isOpen, changeOpen }) => {
   const creds = useSelector((state) => state.chats.creds);
-  const render = (obj, index) => {
-    return (
-      <div key={index} className="container-chatinfo-participant">
-        <div className="container-chatinfo-pariticipant-pfp">
-          <Avatar src={null} alt="" />
-        </div>
-        <div className="container-chatinfo-participant-name">
-          <p>{obj.name}</p>
-        </div>
-      </div>
-    );
-  };
+  // const render = (obj, index) => {
+  //   return (
+  //     <div key={index} className="container-chatinfo-participant">
+  //       <div className="container-chatinfo-pariticipant-pfp">
+  //         <Avatar src={null} alt="" />
+  //       </div>
+  //       <div className="container-chatinfo-participant-name">
+  //         <p>{obj.name}</p>
+  //       </div>
+  //     </div>
+  //   );
+  // };
   if (creds) {
     return (
       <div

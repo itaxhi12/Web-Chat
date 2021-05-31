@@ -6,7 +6,7 @@ import moment from "moment";
 const Message = (props) => {
   const { data, isMine, startsSequence, endsSequence, showTimestamp } = props;
 
-  const friendlyTimestamp = moment(data.timestamp).format("LLLL");
+  const friendlyTimestamp = moment(data.createdAt).format("LLLL");
   return (
     <div
       className={[
@@ -20,7 +20,7 @@ const Message = (props) => {
       <div className="bubble-container">
         <div className="bubble" title={friendlyTimestamp}>
           {!isMine && <h4>{data.author}:</h4>}
-          {data.message}
+          {data.content}
         </div>
       </div>
     </div>

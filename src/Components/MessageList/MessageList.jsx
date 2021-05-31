@@ -1,87 +1,55 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import Message from "../Message/Message";
 import moment from "moment";
-import { useSelector } from "react-redux";
-const MY_USER_ID = "apple";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 const MessageList = ({ closeAbout }) => {
+  const [text, setText] = useState("");
+
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user[0]);
   const creds = useSelector((state) => state.chats.creds);
   const darkmode = useSelector((state) => state.darkmode.darkmode);
-  const [messages] = useState([
-    {
-      id: 1,
-      author: "apple",
-      message:
-        "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 2,
-      author: "orange",
-      message:
-        "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 3,
-      author: "orange",
-      message:
-        "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 4,
-      author: "apple",
-      message:
-        "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 5,
-      author: "apple",
-      message:
-        "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 6,
-      author: "apple",
-      message:
-        "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 7,
-      author: "orange",
-      message:
-        "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 8,
-      author: "orange",
-      message:
-        "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 9,
-      author: "apple",
-      message:
-        "Hello world! This is a long message that will hopefully get wrapped by our message bubble component! We will see how well it works.",
-      timestamp: new Date().getTime(),
-    },
-    {
-      id: 10,
-      author: "orange",
-      message:
-        "It looks like it wraps exactly as it is supposed to. Lets see what a reply looks like!",
-      timestamp: new Date().getTime(),
-    },
-  ]);
+  const chat = useSelector((state) => state.chats.currentChat);
+  const messages = useSelector((state) => state.messages.messages);
 
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (text !== "") {
+      axios
+        .post(
+          `http://localhost:4000/message`,
+          { chatid: chat._id, author: user.user.username, content: text },
+          { headers: { Authorization: user.jwt } }
+        )
+        .then((res) => {
+          dispatch({
+            type: "NEW MESSAGE",
+            data: res.data.message,
+          });
+          setText("");
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (chat) {
+      axios
+        .get(`http://localhost:4000/messages/${chat._id}`, {
+          headers: {
+            Authorization: user.jwt,
+          },
+        })
+        .then((res) => {
+          console.log(res.data)
+          dispatch({ type: "GET MESSAGES", data: res.data });
+        });
+    }
+  }, [chat, user, dispatch]);
   const renderMessages = () => {
     let i = 0;
     let messageCount = messages.length;
@@ -91,8 +59,8 @@ const MessageList = ({ closeAbout }) => {
       let previous = messages[i - 1];
       let current = messages[i];
       let next = messages[i + 1];
-      let isMine = current.author === MY_USER_ID;
-      let currentMoment = moment(current.timestamp);
+      let isMine = current.author === user.user.username;
+      let currentMoment = moment(current.createdAt);
       let prevBySameAuthor = false;
       let nextBySameAuthor = false;
       let startsSequence = true;
@@ -100,7 +68,7 @@ const MessageList = ({ closeAbout }) => {
       let showTimestamp = true;
 
       if (previous) {
-        let previousMoment = moment(previous.timestamp);
+        let previousMoment = moment(previous.createdAt);
         let previousDuration = moment.duration(
           currentMoment.diff(previousMoment)
         );
@@ -116,7 +84,7 @@ const MessageList = ({ closeAbout }) => {
       }
 
       if (next) {
-        let nextMoment = moment(next.timestamp);
+        let nextMoment = moment(next.createdAt);
         let nextDuration = moment.duration(nextMoment.diff(currentMoment));
         nextBySameAuthor = next.author === current.author;
 
@@ -149,12 +117,20 @@ const MessageList = ({ closeAbout }) => {
           <div className="container-messagelist-messages">
             {renderMessages()}
           </div>
-          <div className="container-messagelist-send">
-            <input placeholder="Type a message" />
-            <button>
-              <SendIcon />
-            </button>
-          </div>
+          <form onSubmit={sendMessage} className="container-messagelist-send">
+            <div className="container-messagelist-send">
+              <input
+                id="text"
+                placeholder="Type a message"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                required
+              />
+              <button type="submit">
+                <SendIcon />
+              </button>
+            </div>
+          </form>
         </>
       ) : (
         <div

@@ -29,7 +29,7 @@ app.use(
 
 app.use(express.json());
 
-app.use(user,group);
+app.use(user,group,messages);
 
 app.get("/", (req, res) => {
   return res.status(200).json({ message: "HELLO" });

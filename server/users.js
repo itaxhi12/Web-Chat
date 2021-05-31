@@ -203,7 +203,6 @@ router.put("/changestatus/:username", async (req, res) => {
 
 router.get("/user/:userid", async (req, res) => {
   const { userid } = req.params;
-console.log(userid)
   const Authorization = req.header("Authorization");
   if (Authorization) {
     if (jwt.verify(Authorization, process.env.jwtkey)) {
