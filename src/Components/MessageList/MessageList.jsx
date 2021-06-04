@@ -1,11 +1,11 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import Message from "../Message/Message";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import { io } from "socket.io-client";
 const MessageList = ({ closeAbout }) => {
   const [text, setText] = useState("");
 
@@ -17,39 +17,37 @@ const MessageList = ({ closeAbout }) => {
   const chat = useSelector((state) => state.chats.currentChat);
   const messages = useSelector((state) => state.messages.messages);
 
+  const socket = useRef(null);
+
+  socket.current = io("http://localhost:8000");
+
   const sendMessage = (e) => {
     e.preventDefault();
     if (text !== "") {
-      axios
-        .post(
-          `http://localhost:4000/message`,
-          { chatid: chat._id, author: user.user.username, content: text },
-          { headers: { Authorization: user.jwt } }
-        )
-        .then((res) => {
-          dispatch({
-            type: "NEW MESSAGE",
-            data: res.data.message,
-          });
-          setText("");
+      socket.current.emit("new message", {
+        chatid: chat._id,
+        author: user.user.username,
+        content: text,
+      });
+      socket.current.on("newmessage", (message) => {
+     console.log(message)
+        dispatch({
+          type: "NEW MESSAGE",
+          data: message,
         });
+        setText("");
+      });
     }
   };
 
   useEffect(() => {
     if (chat) {
-      axios
-        .get(`http://localhost:4000/messages/${chat._id}`, {
-          headers: {
-            Authorization: user.jwt,
-          },
-        })
-        .then((res) => {
-          console.log(res.data)
-          dispatch({ type: "GET MESSAGES", data: res.data });
-        });
+      socket.current.emit("getmessages", chat._id);
+      socket.current.on("messages", (res) => {
+        dispatch({ type: "GET MESSAGES", data: res });
+      });
     }
-  }, [chat, user, dispatch]);
+  }, [chat, user, dispatch, socket]);
   const renderMessages = () => {
     let i = 0;
     let messageCount = messages.length;
@@ -122,6 +120,7 @@ const MessageList = ({ closeAbout }) => {
               <input
                 id="text"
                 placeholder="Type a message"
+                autoComplete="off"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 required

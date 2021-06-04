@@ -6,7 +6,11 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useSnackbar } from "react-simple-snackbar";
 const Changepass = ({ isOpen, changeOpen, username }) => {
-  const [input, setInput] = useState({});
+  const [input, setInput] = useState({
+    oldpass: "",
+    newpass: "",
+    confpass: "",
+  });
   const isDarkMode = useSelector((state) => state.darkmode.darkmode);
   const [openSnackbar] = useSnackbar({
     position: "bottom-left",
@@ -19,6 +23,15 @@ const Changepass = ({ isOpen, changeOpen, username }) => {
       color: isDarkMode ? "white" : "black",
     },
   });
+
+  const closesidebar = () => {
+    setInput({
+      oldpass: "",
+      newpass: "",
+      confpass: "",
+    });
+    changeOpen()
+  };
   const changepass = (e) => {
     e.preventDefault();
     if (input.newpass === input.confpass) {
@@ -50,7 +63,7 @@ const Changepass = ({ isOpen, changeOpen, username }) => {
     >
       <div className="container-changepass-header">
         <div className="container-changepass-header-arrow">
-          <ArrowBack onClick={changeOpen} style={{ color: "white" }} />
+          <ArrowBack onClick={closesidebar} style={{ color: "white" }} />
         </div>
         <p>Change Password</p>
       </div>
@@ -62,6 +75,7 @@ const Changepass = ({ isOpen, changeOpen, username }) => {
             <input
               type="password"
               name="oldpass"
+              value={input.oldpass}
               placeholder="Old Password"
               onChange={handleInput}
               required
@@ -73,6 +87,7 @@ const Changepass = ({ isOpen, changeOpen, username }) => {
           <input
             type="password"
             name="newpass"
+            value={input.newpass}
             placeholder="New Password"
             onChange={handleInput}
             required
@@ -83,6 +98,7 @@ const Changepass = ({ isOpen, changeOpen, username }) => {
           <input
             name="confpass"
             type="password"
+            value={input.confpass}
             placeholder="Confirm New Password"
             onChange={handleInput}
             required

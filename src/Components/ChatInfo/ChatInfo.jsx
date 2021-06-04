@@ -41,7 +41,7 @@ const ChatInfo = ({ isOpen, changeOpen }) => {
             <div style={{ display: "flex", alignItems: "center" }}>
               <input
                 placeholder="Group Name"
-                defaultValue={creds.name?creds.name:""}
+                defaultValue={creds.name}
                 disabled={true}
               />
             </div>
@@ -53,7 +53,7 @@ const ChatInfo = ({ isOpen, changeOpen }) => {
                 id="status"
                 disabled={true}
                 placeholder="Add group description"
-                defaultValue={creds.status?creds.status:""}
+                defaultValue={creds.status}
               />{" "}
             </div>
           </div>

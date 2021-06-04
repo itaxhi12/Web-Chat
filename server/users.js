@@ -1,8 +1,6 @@
-
 const mongoose = require("mongoose");
 const express = require("express");
 const bcrypt = require("bcryptjs");
-
 
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -41,10 +39,15 @@ const userSchema = new mongoose.Schema(
 const model = mongoose.model("users", userSchema);
 
 router.post("/register", async (req, res) => {
-  let { username, password } = req.body;
+  let { username, password, status, name } = req.body;
   password = bcrypt.hashSync(password, 10);
   try {
-    model.create({ username: username, password: password });
+    model.create({
+      username: username,
+      password: password,
+      name: name,
+      status: status,
+    });
 
     try {
       const user = await model.find({}, (err, data) => {
@@ -86,7 +89,7 @@ router.post("/login", async (req, res) => {
     res.status(200).json({
       jwt: token,
       user: {
-        id:User._id,
+        id: User._id,
         username: User.username,
         name: User.name,
         status: User.status,
@@ -104,7 +107,7 @@ router.put("/changepass/:username", async (req, res) => {
   const { username } = req.params;
   const User = await model.findOne({ username: username }).lean();
 
-    if (bcrypt.compareSync(oldpass, User.password)) {
+  if (bcrypt.compareSync(oldpass, User.password)) {
     const pass = bcrypt.hashSync(newpass, 10);
     model.findByIdAndUpdate(
       { _id: User._id },
@@ -144,7 +147,7 @@ router.put("/changename/:username", async (req, res) => {
             res.status(200).json({
               jwt: token,
               user: {
-                id:User._id,
+                id: User._id,
                 username: User.username,
                 name: User.name,
                 status: User.status,
@@ -183,7 +186,7 @@ router.put("/changestatus/:username", async (req, res) => {
             res.status(200).json({
               jwt: token,
               user: {
-                id:User._id,
+                id: User._id,
                 username: User.username,
                 name: User.name,
                 status: User.status,
@@ -214,7 +217,9 @@ router.get("/user/:userid", async (req, res) => {
           status: user.status,
           pfp: user.pfp,
         });
-      }catch(e){console.log(e)}
+      } catch (e) {
+        console.log(e);
+      }
     } else {
       return res.status(401).json({ message: "User Unauthorized" });
     }

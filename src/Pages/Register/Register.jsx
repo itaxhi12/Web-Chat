@@ -40,6 +40,8 @@ const Register = () => {
         .post("http://localhost:4000/register", {
           username: input.username,
           password: input.password,
+          name: "No name set",
+          status:"Hey there i am using chat"
         })
         .then((res) => {
           history.push("/");
