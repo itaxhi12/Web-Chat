@@ -19,8 +19,7 @@ const userSchema = new mongoose.Schema(
       required: false,
     },
     pfp: {
-      data: Buffer,
-      contentType: String,
+      type: String,
       required: false,
     },
   },
@@ -31,4 +30,4 @@ const userSchema = new mongoose.Schema(
 
 const model = mongoose.model("users", userSchema);
 
-module.exports = model
+module.exports = model;

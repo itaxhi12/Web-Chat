@@ -9,10 +9,12 @@ const MessageNav = ({ changeOpen }) => {
     return (
       <div onClick={changeOpen} className="container-messagenav">
         <div className="container-messagenav-pfp">
-          <Avatar/>
+          <Avatar
+            src={creds.pfp ? `http://localhost:4000/${creds.pfp}` : null}
+          />
         </div>
         <div className="container-messagenav-title">
-          <p>{ creds.username}</p>
+          <p>{creds.username}</p>
         </div>
       </div>
     );

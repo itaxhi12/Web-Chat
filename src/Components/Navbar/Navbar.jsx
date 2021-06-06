@@ -10,9 +10,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 
-const Navbar = ({changeopen,changePass}) => {
+const Navbar = ({ changeopen, changePass }) => {
   const darkMode = useSelector((state) => state.darkmode.darkmode);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user[0]);
   const [anchorEl, setAnchorEl] = useState(null);
   const divRef = useRef();
   function handleClick() {
@@ -74,14 +75,14 @@ const Navbar = ({changeopen,changePass}) => {
     dispatch({ type: "LOGOUT" });
     handleClose();
   };
-  const gotoProfile = ()=>{
-    changeopen()
-    handleClose()
-  }
-  const gotoChangePass = ()=>{
-    changePass()
-    handleClose()
-  }
+  const gotoProfile = () => {
+    changeopen();
+    handleClose();
+  };
+  const gotoChangePass = () => {
+    changePass();
+    handleClose();
+  };
 
   return (
     <>
@@ -89,8 +90,20 @@ const Navbar = ({changeopen,changePass}) => {
         <div className="container-navbar-pfp">
           <button
             onClick={changeopen}
-            style={{ background: "none", padding: 0, margin: 0 ,cursor:"pointer"}}>
-            <Avatar source={null} />
+            style={{
+              background: "none",
+              padding: 0,
+              margin: 0,
+              cursor: "pointer",
+            }}
+          >
+            <Avatar
+              src={
+                user.user.pfp
+                  ? `http://localhost:4000/${user.user.pfp}`
+                  : null
+              }
+            />
           </button>
         </div>
         <div className="container-navbar-themechanger">
@@ -102,14 +115,16 @@ const Navbar = ({changeopen,changePass}) => {
             ref={divRef}
             aria-controls={id}
             aria-haspopup="true"
-            onClick={handleClick}>
+            onClick={handleClick}
+          >
             <MoreVertIcon style={{ color: darkMode ? "#FFFFFF" : "#000000" }} />
           </Button>
           <StyledMenu
             id={id}
             anchorEl={anchorEl}
             open={open}
-            onClose={handleClose}>
+            onClose={handleClose}
+          >
             <StyledMenuItem onClick={gotoProfile}>Profile</StyledMenuItem>
             <StyledMenuItem onClick={gotoChangePass}>
               Change Password
@@ -118,7 +133,6 @@ const Navbar = ({changeopen,changePass}) => {
           </StyledMenu>
         </div>
       </div>
-   
     </>
   );
 };

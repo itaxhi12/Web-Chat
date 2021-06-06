@@ -4,7 +4,27 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const convo = require("../Models/conversations");
-const model = require("../Models/users")
+const model = require("../Models/users");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const path = `./uploads/`;
+    fs.mkdirSync(path, { recursive: true });
+    return cb(null, path);
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString().replace(/:/g, "") + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+  },
+});
 
 router.post("/register", async (req, res) => {
   let { username, password, status, name } = req.body;
@@ -67,6 +87,44 @@ router.post("/login", async (req, res) => {
   } else {
     res.status(401);
     res.json({ error: "Invalid username or password" });
+  }
+});
+router.put("/changepfp/:username", upload.single("pfp"), async (req, res) => {
+  const { username } = req.params;
+  const Authorization = req.header("Authorization");
+  if (Authorization) {
+    if (jwt.verify(Authorization, process.env.jwtkey)) {
+      console.log(req.file);
+      const user = await model.findOne({ username: username }).lean();
+      model.findByIdAndUpdate(
+        { _id: user._id },
+        { $set: { pfp: req.file.path } },
+        { new: true, useFindAndModify: false },
+        async (err, data) => {
+          if (err) {
+            console.log(err);
+          } else {
+            const User = await model.findOne({ username: username }).lean();
+
+            const token = jwt.sign(User, process.env.jwtkey);
+            res.status(200).json({
+              jwt: token,
+              user: {
+                id: User._id,
+                username: User.username,
+                name: User.name,
+                status: User.status,
+                pfp: User.pfp,
+              },
+            });
+          }
+        }
+      );
+    } else {
+      return res.status(401).json({ message: "User Unauthorized" });
+    }
+  } else {
+    return res.status(401).json({ message: "User Unauthorized" });
   }
 });
 

@@ -1,17 +1,20 @@
 /** @format */
 
 import { ArrowBack } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import CreateIcon from "@material-ui/icons/Create";
 import IconButton from "@material-ui/core/IconButton";
 import CheckIcon from "@material-ui/icons/Check";
+import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 const Profile = ({ isOpen, changeOpen }) => {
   const darkmode = useSelector((state) => state.darkmode.darkmode);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user[0]);
+  const imageInput = useRef(null);
   const [input, setInput] = useState({});
+  const [file,setFile] = useState(null)
   const [inputDis, SetinputDis] = useState(true);
   const [textDis, setTextDis] = useState(true);
   const changeDisabled = () => {
@@ -41,6 +44,30 @@ const Profile = ({ isOpen, changeOpen }) => {
       .catch((err) => console.log(err));
   };
 
+  const changePfp = (img) => {
+    setFile(img)
+    const pfp = new FormData()
+    pfp.append("pfp",img)
+    axios
+      .put(
+        `http://localhost:4000/changepfp/${user.user.username}`,
+        pfp,
+        { headers: { Authorization: user.jwt } }
+      )
+      .then((res) => {
+        setFile(null)
+        const data = [res.data];
+        if (localStorage.getItem("user")) {
+          localStorage.setItem("user", JSON.stringify(data));
+          dispatch({ type: "LOGIN", data: data });
+        } else {
+          sessionStorage.setItem("user", JSON.stringify(data));
+          dispatch({ type: "LOGIN", data: data });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+console.log(user.user.pfp)
   const changeStatus = () => {
     axios
       .put(
@@ -78,10 +105,26 @@ const Profile = ({ isOpen, changeOpen }) => {
       <div className="container-profile-creds">
         <div className="container-profile-creds-pfp">
           <input
+            ref={imageInput}
+            type="file"
+            style={{ display: "none" }}
+            value = {file}
+            onChange={(e) => changePfp(e.target.files[0])}
+            accept="image/png, image/jpeg, image/jpg , image/jfif"
+          />
+          <img
             type="image"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            src={user.user.pfp?`http://localhost:4000/${user.user.pfp}`:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"}
             alt=""
           />
+
+          <div
+            onClick={(e) => imageInput.current.click()}
+            className="container-profile-creds-pfp-overlay"
+          >
+            <CameraAltIcon style={{ fontSize: "xxx-large", color: "white" }} />
+            <p>Change Profile Picture</p>
+          </div>
         </div>
         <div className="container-profile-creds-name">
           <p>Your Name</p>

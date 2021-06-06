@@ -30,9 +30,12 @@ const ChatInfo = ({ isOpen, changeOpen }) => {
         </div>
         <div className="container-chatinfo-creds">
           <div className="container-chatinfo-creds-pfp">
-            <input
-              type="image"
-              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            <img
+              src={
+                creds.pfp
+                  ? `http://localhost:4000/${creds.pfp}`
+                  : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              }
               alt=""
             />
           </div>

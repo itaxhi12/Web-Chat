@@ -41,7 +41,7 @@ const Conversation = ({ convo, jwt, id }) => {
       style={style}
     >
       <div className="container-convlist-convs-items-pfp">
-        <Avatar src={null} alt="" />
+        <Avatar src={creds.pfp?`http://localhost:4000/${creds.pfp}`:null} alt="" />
       </div>
       <div className="container-convlist-convs-items-name">
         <p>{creds.username}</p>

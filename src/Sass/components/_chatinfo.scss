@@ -50,10 +50,10 @@
         display: flex;
         justify-content: center;
         margin-bottom: 1em;
-        & input {
+        & img {
           padding: 1em;
-          max-height: 15em;
-          max-width: 15em;
+          height: 15em;
+          width: 15em;
           border-radius: 50%;
         }
       }
